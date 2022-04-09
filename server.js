@@ -25,10 +25,14 @@ app.get("/", function (req, res) {
 // your first API endpoint...
 app.get("/api/whoami", function (req, res) {
   let localInfo = os.networkInterfaces();
+  console.log();
   res.json({
-    ipaddress: localInfo["Wi-Fi"][0].address,
+    ipaddress: req.headers['x-forwarded-for'] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    req.connection.socket.remoteAddress,
     language: req.headers["accept-language"],
-    software: userAgent.toString(),
+    software: req.headers['user-agent'],
   });
 });
 
